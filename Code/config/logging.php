@@ -89,6 +89,20 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'tim-subscriber' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/tim-sub.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
+
+        'tim-unsubscriber' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/tim-unsub.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
     ],
 
 ];
