@@ -1,0 +1,4 @@
+CREATE DATABASE base_apoio;
+CREATE USER 'admin'@'%' IDENTITY BY 'Secret*123';
+GRANT ALL PRIVILEGES ON base_apoio.* TO 'admin'@'%';
+FLUSH PRIVILEGES ;

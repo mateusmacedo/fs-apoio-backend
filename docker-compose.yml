@@ -1,0 +1,58 @@
+version: '2'
+services:
+  webserver:
+    container_name: webserver
+    image: webdevops/php-nginx-dev:7.3
+    environment:
+      - DBHOST=dbserver
+      - DBUSER=admin
+      - DBPASS=Secret*123
+      - DBPORT=3306
+      - DBNAME=base_apoio
+      - RABBITMQ_HOST=tim-rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VHOST=/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_USER=guest
+      - REDIS_PASSWORD=guest
+    depends_on:
+      - dbserver
+    links:
+      - dbserver:dbserver
+    restart: always
+    expose:
+      - "80"
+    volumes:
+      - ".:/app"
+      - "./.docker/nginx/app.conf:/etc/nginx/sites-enabled/app.conf"
+    env_file:
+      - "./.docker/php/.env"
+    networks:
+      net:
+        ipv4_address: 172.0.0.2
+  dbserver:
+    container_name: dbserver
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    expose:
+      - "3306"
+    volumes:
+      - "./.docker/mysql:/docker-entrypoint-initdb.d"
+      - "./.docker/volume/mysql:/var/lib/mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      ipv4_address: 172.0.0.3
+networks:
+  net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      config:
+        - subnet: 172.0.0.0/24
+          gateway: 172.0.0.1
