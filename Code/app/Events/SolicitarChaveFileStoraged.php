@@ -3,12 +3,11 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use SplFileInfo;
 
-class SolicitarChaveFileStoraged implements ShouldQueue
+class SolicitarChaveFileStoraged
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     /**

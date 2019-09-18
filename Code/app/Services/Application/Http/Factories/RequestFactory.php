@@ -17,7 +17,7 @@ class RequestFactory implements RequestFactoryInterface
             $payload->getMethod(),
             $payload->getUri(),
             $payload->getHeaders(),
-            http_build_query($payload->getBody(), null, '&')
+            $payload->getBody()
         );
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services\Application\Http\Payloads\Gvt;
 
 
 use App\Services\Application\Http\Interfaces\PayloadInterface;
+use stdClass;
 
 class SolicitarChave implements PayloadInterface
 {
@@ -33,14 +34,14 @@ class SolicitarChave implements PayloadInterface
      */
     private $produto;
 
-    public function __construct(string $msisdn, string $cpf, string $email, string $purchaseOrderNumber, string $serviceId, string $produto)
+    public function __construct(stdClass $params)
     {
-        $this->msisdn = $msisdn;
-        $this->cpf = $cpf;
-        $this->email = $email;
-        $this->purchaseOrderNumber = $purchaseOrderNumber;
-        $this->serviceId = $serviceId;
-        $this->produto = $produto;
+        $this->msisdn = $params->msisdn;
+        $this->cpf = $params->cpf;
+        $this->email = $params->email;
+        $this->purchaseOrderNumber = $params->purchaseOrderNumber;
+        $this->serviceId = $params->serviceId;
+        $this->produto = $params->produto;
     }
 
     public function __toString(): string
@@ -70,9 +71,9 @@ class SolicitarChave implements PayloadInterface
         ];
     }
 
-    public function getBody(): array
+    public function getBody(): string
     {
-        return [
+        $data = [
             'msisdn' => $this->msisdn,
             'cpf' => $this->cpf,
             'email' => $this->email,
@@ -80,5 +81,7 @@ class SolicitarChave implements PayloadInterface
             'serviceId' => $this->serviceId,
             'produto' => $this->produto,
         ];
+        return http_build_query($data, null, '&');
+
     }
 }

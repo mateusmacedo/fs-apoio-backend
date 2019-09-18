@@ -35,6 +35,10 @@ class ClientsDomainService implements ClientDomainServiceInterface
         $this->logger = $logger;
     }
 
+    /**
+     * @param UploadedFile $file
+     * @todo analisar melhor o ponto de lançamento do evento
+     */
     public function solicitarChavesFromFile(UploadedFile $file)
     {
         try {

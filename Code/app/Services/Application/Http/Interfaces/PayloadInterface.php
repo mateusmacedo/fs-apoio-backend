@@ -12,7 +12,7 @@ interface PayloadInterface
 
     public function getHeaders(): array;
 
-    public function getBody(): array;
+    public function getBody(): string;
 
     public function __toString(): string;
 }

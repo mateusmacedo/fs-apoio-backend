@@ -13,7 +13,7 @@ class ImportClientes implements ShouldQueue
     public $connection = 'rabbitmq';
     public $queue = 'imports-base-clientes';
     public $timeout = 0;
-    public $tries = 1;
+    public $tries = 3;
     /**
      * @var Importer
      */
@@ -51,5 +51,10 @@ class ImportClientes implements ShouldQueue
         } finally {
             $this->logger->listenerFinalizado();
         }
+    }
+
+    public function failed(Exception $exception)
+    {
+        $this->logger->listenerFalhou($exception);
     }
 }

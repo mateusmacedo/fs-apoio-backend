@@ -12,7 +12,6 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use stdClass;
 
 class SolicitarChaveImport implements ToCollection, WithHeadingRow, WithChunkReading, WithCalculatedFormulas
 {
@@ -40,18 +39,12 @@ class SolicitarChaveImport implements ToCollection, WithHeadingRow, WithChunkRea
         try {
             $this->logger->ImportacaoIniciada();
             $this->logger->collectionRecebida($collection);
-            $obj = new stdClass();
             $this->collection = $collection;
             $job = $this;
-            $collection->each(static function ($row) use ($obj, $job) {
+            $collection->each(static function ($row) use ($job) {
                 $job->row = $row;
-                $obj->operadora = $row['operadora'];
-                $obj->msisdn = $row['msisdn'];
-                $obj->subscriptionId = $row['subscription_id'];
-                $obj->serviceId = $row['service_id'];
-                $obj->dataCompra = $row['data'];
-                $obj->categoria = $row['categoria'];
-                SolicitarChave::dispatch($obj)->onConnection('rabbitmq')
+                SolicitarChave::dispatch($row->all())
+                    ->onConnection('rabbitmq')
                     ->onQueue('solicitar-chave');
             });
         } catch (Exception $exception) {

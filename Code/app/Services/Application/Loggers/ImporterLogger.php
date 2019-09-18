@@ -28,7 +28,14 @@ class ImporterLogger implements ImporterLoggerInterface
 
     public function collectionRecebida(Collection $collection): void
     {
+        $this->logger->debug('### COLLECTION ###');
         $this->logger->debug($collection->toJson());
+    }
+
+    public function rowRecebida($row): void
+    {
+        $this->logger->debug('### ROW ###');
+        $this->logger->debug($row);
     }
 
     public function importacaoRealizada(): void

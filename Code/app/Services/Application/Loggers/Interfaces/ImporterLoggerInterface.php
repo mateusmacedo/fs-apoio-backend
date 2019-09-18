@@ -17,6 +17,8 @@ interface ImporterLoggerInterface
 
     public function collectionRecebida(Collection $collection): void;
 
+    public function rowRecebida($row): void;
+
     public function importacaoRealizada(): void;
 
     public function importacaoFalhou(Exception $exception, Collection $collection, array $row): void;
