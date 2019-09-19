@@ -14,7 +14,7 @@ use stdClass;
 
 class SolicitarChavePaylodFactory extends AbstractPayloadFactory
 {
-    static private function buildChaveGvt(Collection $data)
+    static private function buildGvt(Collection $data)
     {
         $required = collect([
         ]);
@@ -23,7 +23,7 @@ class SolicitarChavePaylodFactory extends AbstractPayloadFactory
         return static::hydrate($data, $required, $optional);
     }
 
-    static private function buildChaveTim(Collection $data): stdClass
+    static private function buildTim(Collection $data): stdClass
     {
         $required = collect([
             'subscription_id' => '',
@@ -50,11 +50,11 @@ class SolicitarChavePaylodFactory extends AbstractPayloadFactory
         }
         switch (strtolower($body->get('operadora'))) {
             case 'gvt':
-                $payloadData = static::buildChaveGvt($body);
+                $payloadData = static::buildGvt($body);
                 $payload = new SolicitarChaveGvt($payloadData);
                 break;
             case 'tim':
-                $payloadData = static::buildChaveTim($body);
+                $payloadData = static::buildTim($body);
                 $payload = new SolicitarChaveTim($payloadData);
                 break;
             default:

@@ -52,10 +52,9 @@ class WebConsumer implements WebConsumerInterface
             return new Response($contents, $statusCode);
         } catch (Exception $exception) {
             $this->logger->requestFalhou($exception);
+            return new Response($exception->getMessage(), 500);
         } finally {
             $this->logger->requestFinalizou();
         }
-
-        return new Response('Fail', 500);
     }
 }

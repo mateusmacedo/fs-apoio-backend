@@ -69,7 +69,9 @@ class SolicitarChave implements ShouldQueue
 
     private function retryHandle()
     {
-        SolicitarChave::dispatch($this->body)->onQueue($this->queueRetry);
+        SolicitarChave::dispatch($this->body)
+            ->onConnection('rabbitmq')
+            ->onQueue($this->queueRetry);
         $this->logger->jobRedirecionado($this->queueRetry);
         $this->delete();
     }

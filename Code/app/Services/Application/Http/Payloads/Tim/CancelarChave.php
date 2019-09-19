@@ -11,6 +11,13 @@ class CancelarChave implements PayloadInterface
 {
     public function __construct(stdClass $params)
     {
+        $this->chave = $params->chave;
+        $this->motivo = $params->motivo;
+        $this->vendedor = $params->vendedor;
+        $this->silent = $params->silent;
+        $this->clientCorrelator = $params->clientCorrelator;
+        $this->biAcao = $params->biAcao;
+        $this->canalCancelamento = $params->canalCancelamento;
     }
 
     public function __toString(): string
@@ -27,7 +34,13 @@ class CancelarChave implements PayloadInterface
     public function getBody(): string
     {
         return json_encode([
-
+            'chave' => $this->chave,
+            'motivo' => $this->motivo,
+            'vendedor' => $this->vendedor,
+            'silent' => $this->silent,
+            'clientCorrelator' => $this->clientCorrelator,
+            'biAcao' => $this->biAcao,
+            'canalCancelamento' => $this->canalCancelamento
         ]);
     }
 

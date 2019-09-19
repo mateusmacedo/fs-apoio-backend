@@ -17,7 +17,6 @@ use RuntimeException;
 class CancelarChave implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3;
     /**
      * @var array
      */
@@ -27,6 +26,7 @@ class CancelarChave implements ShouldQueue
      */
     private $logger;
     private $queueRetry = 'cancelar-chave-retry';
+    public $tries = 3;
 
     /**
      * SolicitarChave constructor.
@@ -69,8 +69,10 @@ class CancelarChave implements ShouldQueue
 
     private function retryHandle()
     {
-        SolicitarChave::dispatch($this->body)->onQueue($this->queueRetry);
-        $this->logger->jobRedirecionado($this->queueRetry);
+        CancelarChave::dispatch($this->body)
+            ->onConnection('rabbitmq')
+            ->onQueue($this->queueRetry);
         $this->delete();
+        $this->logger->jobRedirecionado($this->queueRetry);
     }
 }

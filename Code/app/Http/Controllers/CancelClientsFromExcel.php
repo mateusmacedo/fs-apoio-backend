@@ -26,7 +26,7 @@ class CancelClientsFromExcel extends Controller
      */
     public function __invoke(Request $request)
     {
-        $this->domainService->solicitarChavesFromFile($request->file('file'));
+        $result = $this->domainService->cancelarChavesFromFile($request->file('file'));
         return new Response();
     }
 }
