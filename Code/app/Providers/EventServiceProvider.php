@@ -15,6 +15,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SolicitarChaveFileStoraged' => [
             'App\Listeners\ImportClientes'
         ],
+        'App\Events\CancelarChaveFileStoraged' => [
+            'App\Listeners\CancelClientes'
+        ],
     ];
 
     /**

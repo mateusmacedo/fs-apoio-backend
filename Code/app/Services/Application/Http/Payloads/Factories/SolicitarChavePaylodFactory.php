@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services\Application\Http\Factories;
+namespace App\Services\Application\Http\Payloads\Factories;
 
 
 use App\Services\Application\Http\Interfaces\PayloadInterface;
@@ -12,32 +12,8 @@ use InvalidArgumentException;
 use RuntimeException;
 use stdClass;
 
-class SolicitarChaveFactory
+class SolicitarChavePaylodFactory extends AbstractPayloadFactory
 {
-    const VALID_OPERATORS = ['tim', 'gvt', 'vivo', 'oi', 'claro'];
-
-    static private function hydrate(Collection $data, Collection $required, Collection $optional)
-    {
-        $dataKeys = collect($data)->keys();
-        $required->keys()->each(static function ($Key) use ($dataKeys) {
-            if (!$dataKeys->contains($Key)) {
-                throw new RuntimeException("chave {$Key} requerida para a criação do payloa");
-            }
-        });
-        $keys = $required->merge($optional);
-        $data = collect($data);
-        $result = new stdClass();
-        $keys->each(static function ($item, $key) use (&$result, $data) {
-            $camelKey = camel_case($key);
-            if (!$data->contains($key, $item)) {
-                $result->$camelKey = $item;
-            } else {
-                $result->$camelKey = $data->get($key);
-            }
-        });
-        return $result;
-    }
-
     static private function buildChaveGvt(Collection $data)
     {
         $required = collect([

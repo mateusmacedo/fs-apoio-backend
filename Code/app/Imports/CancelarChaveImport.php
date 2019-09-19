@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Jobs\SolicitarChave;
+use App\Jobs\CancelarChave;
 use App\Services\Application\Loggers\Interfaces\ImporterLoggerInterface;
 use Exception;
 use Illuminate\Support\Collection;
@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class SolicitarChaveImport implements ToCollection, WithHeadingRow, WithChunkReading, WithCalculatedFormulas
+class CancelarChaveImport implements ToCollection, WithHeadingRow, WithChunkReading, WithCalculatedFormulas
 {
     /**
      * @var LoggerInterface
@@ -42,9 +42,9 @@ class SolicitarChaveImport implements ToCollection, WithHeadingRow, WithChunkRea
             $job = $this;
             $collection->each(static function ($row) use ($job) {
                 $job->row = $row;
-                SolicitarChave::dispatch($row->all())
+                CancelarChave::dispatch($row->all())
                     ->onConnection('rabbitmq')
-                    ->onQueue('solicitar-chave');
+                    ->onQueue('cancelar-chave');
             });
         } catch (Exception $exception) {
             $this->logger->importacaoFalhou($exception, $this->collection, $this->row);

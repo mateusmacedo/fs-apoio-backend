@@ -56,6 +56,6 @@ class WebConsumer implements WebConsumerInterface
             $this->logger->requestFinalizou();
         }
 
-        return new Response('', 500);
+        return new Response('Fail', 500);
     }
 }

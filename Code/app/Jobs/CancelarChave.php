@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\Application\Http\Interfaces\WebConsumerInterface;
-use App\Services\Application\Http\Payloads\Factories\SolicitarChavePaylodFactory;
+use App\Services\Application\Http\Payloads\Factories\CancelarChavePaylodFactory;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Foundation\Application;
@@ -14,9 +14,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use RuntimeException;
 
-class SolicitarChave implements ShouldQueue
+class CancelarChave implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    public $tries = 3;
     /**
      * @var array
      */
@@ -25,8 +26,7 @@ class SolicitarChave implements ShouldQueue
      * @var Application|App\Services\Application\Loggers\Interfaces\JobsLoggerInterface
      */
     private $logger;
-    private $queueRetry = 'solicitar-chave-retry';
-    public $tries = 3;
+    private $queueRetry = 'cancelar-chave-retry';
 
     /**
      * SolicitarChave constructor.
@@ -48,7 +48,7 @@ class SolicitarChave implements ShouldQueue
     {
         try {
             $this->logger->jobIniciado(__METHOD__, json_encode($this->body));
-            $payload = SolicitarChavePaylodFactory::create(collect($this->body));
+            $payload = CancelarChavePaylodFactory::create(collect($this->body));
             $result = $webConsumer->fetch($payload);
             $this->responseHandle($result);
             $this->logger->jobRealizado($result->getContent());
