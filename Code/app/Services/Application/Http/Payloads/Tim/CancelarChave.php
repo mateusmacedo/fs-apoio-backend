@@ -46,7 +46,7 @@ class CancelarChave implements PayloadInterface
 
     public function getUri(): string
     {
-        return 'http://' . env('TIM_BACKEND_URL', 'tim-backend') . '/api/fluxo-assinatura-interna.php';
+        return 'http://' . env('TIM_BACKEND_URL') . '/api/fluxo-assinatura-interna.php';
     }
 
     public function getMethod(): string

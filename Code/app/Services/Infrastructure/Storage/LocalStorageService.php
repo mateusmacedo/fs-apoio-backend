@@ -18,6 +18,11 @@ class LocalStorageService extends AbstractStorageService implements LocalStorage
         parent::__construct($logger);
     }
 
+    /**
+     * @param $filename
+     * @return File
+     * @todo criar teste
+     */
     public function getFile($filename): File
     {
         try {
@@ -35,6 +40,11 @@ class LocalStorageService extends AbstractStorageService implements LocalStorage
         }
     }
 
+    /**
+     * @param $filename
+     * @return string
+     * criar teste
+     */
     public function getFullPath($filename): string
     {
         try {

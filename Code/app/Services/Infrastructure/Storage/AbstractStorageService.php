@@ -29,12 +29,23 @@ abstract class AbstractStorageService implements StorageServiceInterface
         $this->logger = $logger;
     }
 
+    /**
+     * @param string $basePath
+     * @return AbstractStorageService
+     * @todo setBasePathTestCase
+     */
     public function setBasePath(string $basePath): AbstractStorageService
     {
         $this->basePath = $basePath;
         return $this;
     }
 
+    /**
+     * @param string $filename
+     * @param SplFileInfo $file
+     * @return string
+     * @todo storeTestCase
+     */
     public function store(string $filename, SplFileInfo $file): string
     {
         try {
@@ -53,6 +64,11 @@ abstract class AbstractStorageService implements StorageServiceInterface
         }
     }
 
+    /**
+     * @param string $filename
+     * @return bool
+     * @todo deleteTestCase
+     */
     public function delete(string $filename): bool
     {
         try {
@@ -72,6 +88,11 @@ abstract class AbstractStorageService implements StorageServiceInterface
         }
     }
 
+    /**
+     * @param $filename
+     * @return string
+     * @todo getFilePathTestCase
+     */
     public function getFilePath($filename)
     {
         if (empty($this->basePath)) {
@@ -80,6 +101,11 @@ abstract class AbstractStorageService implements StorageServiceInterface
         return $this->basePath . DIRECTORY_SEPARATOR . $filename;
     }
 
+    /**
+     * @param $filename
+     * @return string
+     * @todo getUrlTestCase
+     */
     public function getUrl($filename): string
     {
         try {
@@ -99,6 +125,11 @@ abstract class AbstractStorageService implements StorageServiceInterface
         }
     }
 
+    /**
+     * @param $filename
+     * @return ResponseInterface
+     * @todo downloadTestCase
+     */
     public function download($filename): ResponseInterface
     {
         try {

@@ -60,6 +60,12 @@ class CancelarChave implements ShouldQueue
         }
     }
 
+    public function failed(Exception $exception)
+    {
+        $this->logger->jobFalhou($exception);
+        $this->retryHandle();
+    }
+
     private function responseHandle(Response $response)
     {
         if ($response->getStatusCode() !== 200) {

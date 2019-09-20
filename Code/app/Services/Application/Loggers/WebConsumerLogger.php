@@ -21,6 +21,10 @@ class WebConsumerLogger implements WebConsumerLoggerInterface
         $this->logger = $logger;
     }
 
+    /**
+     * @param PayloadInterface $payload
+     * @todo logResquestIniciadaTestCase
+     */
     public function requestIniciada(PayloadInterface $payload): void
     {
         $this->logger->debug('### REQUEST INICIADA PAYLOAD ###');
@@ -28,6 +32,12 @@ class WebConsumerLogger implements WebConsumerLoggerInterface
 
     }
 
+    /**
+     * @param string $statusCode
+     * @param array $headers
+     * @param string $contents
+     * @todo logResquestRealizadaTestCase
+     */
     public function requestRealizada(string $statusCode, array $headers, string $contents): void
     {
         $this->logger->debug('### REQUEST REALIZADA RESULT ###');
@@ -36,12 +46,19 @@ class WebConsumerLogger implements WebConsumerLoggerInterface
         $this->logger->debug('Body: ' . $contents);
     }
 
+    /**
+     * @param Exception $exception
+     * @todo logRequestFalhouTestCase
+     */
     public function requestFalhou(Exception $exception): void
     {
         $this->logger->debug('### REQUEST FALHOU EXCEPTION ###');
         $this->logger->debug($exception);
     }
 
+    /**
+     * @todo logRequestFinalizouTestCase
+     */
     public function requestFinalizou(): void
     {
         $this->logger->debug('### REQUEST FINALIZADA ###');

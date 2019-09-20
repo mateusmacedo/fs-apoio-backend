@@ -40,6 +40,7 @@ class ClientsDomainService implements ClientDomainServiceInterface
      * @param UploadedFile $file
      * @return Response
      * @todo analisar melhor o ponto de lançamento do evento
+     * @todo Criar teste
      */
     public function solicitarChavesFromFile(UploadedFile $file): Response
     {
@@ -58,6 +59,12 @@ class ClientsDomainService implements ClientDomainServiceInterface
         return new Response(['Fail'], 500);
     }
 
+
+    /**
+     * @param UploadedFile $file
+     * @return Response
+     * @todo criar teste
+     */
     public function cancelarChavesFromFile(UploadedFile $file)
     {
         try {
@@ -75,11 +82,22 @@ class ClientsDomainService implements ClientDomainServiceInterface
         return new Response(['Fail'], 500);
     }
 
+    /**
+     * @param UploadedFile $file
+     * @param string $prefix
+     * @return string
+     * @todo criar teste
+     */
     private function generateFilename(UploadedFile $file, string $prefix): string
     {
         return $prefix . date('dmYHis') . '.' . $file->getClientOriginalExtension();
     }
 
+    /**
+     * @param string $filePathStored
+     * @return array
+     * @todo criar teste
+     */
     private function getResultData(string $filePathStored): array
     {
         return [
