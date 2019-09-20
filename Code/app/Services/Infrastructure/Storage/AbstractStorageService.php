@@ -7,6 +7,7 @@ namespace App\Services\Infrastructure\Storage;
 use App\Services\Application\Loggers\Interfaces\StorageLoggerInterface;
 use App\Services\Infrastructure\Storage\Interfaces\StorageServiceInterface;
 use Exception;
+use Illuminate\Http\UploadedFile;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -46,7 +47,7 @@ abstract class AbstractStorageService implements StorageServiceInterface
      * @return string
      * @todo storeTestCase
      */
-    public function store(string $filename, SplFileInfo $file): string
+    public function store(string $filename, UploadedFile $file): string
     {
         try {
             if (empty($this->basePath)) {

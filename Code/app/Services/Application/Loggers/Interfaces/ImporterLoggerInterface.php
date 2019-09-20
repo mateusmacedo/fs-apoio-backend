@@ -6,12 +6,10 @@ namespace App\Services\Application\Loggers\Interfaces;
 
 use Exception;
 use Illuminate\Support\Collection;
-use SplFileInfo;
 
 interface ImporterLoggerInterface
 {
     /**
-     * @param SplFileInfo $file
      */
     public function importacaoIniciada(): void;
 

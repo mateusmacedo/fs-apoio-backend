@@ -47,7 +47,7 @@ class ClientsDomainService implements ClientDomainServiceInterface
         try {
             $this->logger->operacaoIniciada($this->getMethodData(__METHOD__, func_get_args()));
             $this->storageService->setBasePath(env('FILESYSTEM_IMPORT_FROM_FILE'));
-            $filePathStored = $this->storageService->store($this->generateFilename($file, 'SolicitarChave'), $file);
+            $filePathStored = $this->storageService->store($this->generateFilename($file, env('SOLICITAR_CHAVE_PREFIX')), $file);
             event(new SolicitarChaveFileStoraged($filePathStored));
             $this->logger->operacaoRealizada($this->getResultData($filePathStored));
             return new Response(['Success'], 200);
@@ -65,12 +65,12 @@ class ClientsDomainService implements ClientDomainServiceInterface
      * @return Response
      * @todo criar teste
      */
-    public function cancelarChavesFromFile(UploadedFile $file)
+    public function cancelarChavesFromFile(UploadedFile $file): Response
     {
         try {
             $this->logger->operacaoIniciada($this->getMethodData(__METHOD__, func_get_args()));
             $this->storageService->setBasePath(env('FILESYSTEM_CANCEL_FROM_FILE'));
-            $filePathStored = $this->storageService->store($this->generateFilename($file, 'CancelarChave'), $file);
+            $filePathStored = $this->storageService->store($this->generateFilename($file, env('CANCELAR_CHAVE_PREFIX')), $file);
             event(new CancelarChaveFileStoraged($filePathStored));
             $this->logger->operacaoRealizada($this->getResultData($filePathStored));
             return new Response(['Success'], 200);

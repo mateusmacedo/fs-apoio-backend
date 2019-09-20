@@ -23,7 +23,7 @@ class CancelarChaveImport implements ToCollection, WithHeadingRow, WithChunkRead
     private $row;
 
     /**
-     * @param LoggerInterface $logger
+     * @param ImporterLoggerInterface $logger
      */
     public function __construct(ImporterLoggerInterface $logger)
     {
@@ -40,11 +40,10 @@ class CancelarChaveImport implements ToCollection, WithHeadingRow, WithChunkRead
             $this->logger->collectionRecebida($collection);
             $this->collection = $collection;
             $job = $this;
-            $collection->each(static function ($row) use ($job) {
+            $collection->each(static function (Collection $row) use ($job) {
                 $job->row = $row;
                 CancelarChave::dispatch($row->all())
-                    ->onConnection('rabbitmq')
-                    ->onQueue('cancelar-chave');
+                    ->onQueue(env('CANCELAR_CHAVE_QUEUE'));
             });
         } catch (Exception $exception) {
             $this->logger->importacaoFalhou($exception, $this->collection, $this->row);

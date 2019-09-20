@@ -27,6 +27,6 @@ class ImportClientsFromExcel extends Controller
     public function __invoke(Request $request): Response
     {
         $result = $this->domainService->solicitarChavesFromFile($request->file('file'));
-        return new Response();
+        return new Response($result->getContent(), $result->getStatusCode());
     }
 }

@@ -33,10 +33,10 @@ class AppServiceProvider extends ServiceProvider
                 $app->make('App\Services\Application\Loggers\Interfaces\WebConsumerLoggerInterface')
             );
         });
-        $this->app->bind('App\Services\Application\Http\Interfaces\ClientInterface', static function ($app) {
+        $this->app->bind('App\Services\Application\Http\Interfaces\ClientInterface', static function () {
             return new GuzzleHttpClient(new Client());
         });
-        $this->app->bind('App\Services\Application\Http\Interfaces\RequestFactoryInterface', static function ($app) {
+        $this->app->bind('App\Services\Application\Http\Interfaces\RequestFactoryInterface', static function () {
             return new RequestFactory();
         });
         $this->app->bind('App\Services\Infrastructure\Storage\Interfaces\StorageServiceInterface', static function ($app) {

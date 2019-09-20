@@ -56,7 +56,7 @@ class SolicitarChave implements PayloadInterface
 
     public function getUri(): string
     {
-        return 'http://' . env('GVT_BACKEND_URL', '172.18.0.4') . '/tests/solicitar_chave.php';
+        return 'http://' . env('GVT_BACKEND_URL') . '/tests/solicitar_chave.php';
     }
 
     public function getMethod(): string

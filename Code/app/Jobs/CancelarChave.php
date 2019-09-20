@@ -6,7 +6,6 @@ use App\Services\Application\Http\Interfaces\WebConsumerInterface;
 use App\Services\Application\Http\Payloads\Factories\CancelarChavePaylodFactory;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Response;
@@ -17,25 +16,18 @@ use RuntimeException;
 class CancelarChave implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    /**
-     * @var array
-     */
-    private $body;
-    /**
-     * @var Application|App\Services\Application\Loggers\Interfaces\JobsLoggerInterface
-     */
-    private $logger;
-    private $queueRetry = 'cancelar-chave-retry';
-    public $tries = 3;
 
-    /**
-     * SolicitarChave constructor.
-     * @param array $body
-     */
+    private $body;
+    private $logger;
+    private $queueRetry;
+    public $tries;
+
     public function __construct(array $body)
     {
         $this->body = $body;
         $this->logger = app('App\Services\Application\Loggers\Interfaces\JobsLoggerInterface');
+        $this->queueRetry = env('CANCELAR_CHAVE_QUEUE') . '-retry';
+        $this->tries = env('CANCELAR_CHAVE_TRIES_QUEUE');
     }
 
     /**
@@ -76,7 +68,6 @@ class CancelarChave implements ShouldQueue
     private function retryHandle()
     {
         CancelarChave::dispatch($this->body)
-            ->onConnection('rabbitmq')
             ->onQueue($this->queueRetry);
         $this->delete();
         $this->logger->jobRedirecionado($this->queueRetry);

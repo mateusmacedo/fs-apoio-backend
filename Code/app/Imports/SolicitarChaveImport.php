@@ -23,7 +23,7 @@ class SolicitarChaveImport implements ToCollection, WithHeadingRow, WithChunkRea
     private $row;
 
     /**
-     * @param LoggerInterface $logger
+     * @param ImporterLoggerInterface $logger
      */
     public function __construct(ImporterLoggerInterface $logger)
     {
@@ -40,11 +40,10 @@ class SolicitarChaveImport implements ToCollection, WithHeadingRow, WithChunkRea
             $this->logger->collectionRecebida($collection);
             $this->collection = $collection;
             $job = $this;
-            $collection->each(static function ($row) use ($job) {
+            $collection->each(static function (Collection $row) use ($job) {
                 $job->row = $row;
                 SolicitarChave::dispatch($row->all())
-                    ->onConnection('rabbitmq')
-                    ->onQueue('solicitar-chave');
+                    ->onQueue(env('SOLICITAR_CHAVE_QUEUE'));
             });
         } catch (Exception $exception) {
             $this->logger->importacaoFalhou($exception, $this->collection, $this->row);

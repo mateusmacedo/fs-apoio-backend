@@ -9,6 +9,14 @@ use stdClass;
 
 class CancelarChave implements PayloadInterface
 {
+    private $chave;
+    private $motivo;
+    private $vendedor;
+    private $silent;
+    private $clientCorrelator;
+    private $biAcao;
+    private $canalCancelamento;
+
     public function __construct(stdClass $params)
     {
         $this->chave = $params->chave;

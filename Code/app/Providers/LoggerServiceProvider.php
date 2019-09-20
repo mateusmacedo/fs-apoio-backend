@@ -2,13 +2,11 @@
 
 namespace App\Providers;
 
-use App\Services\Application\Loggers\BatimentoBaseClientesLogger;
 use App\Services\Application\Loggers\DomainLogger;
 use App\Services\Application\Loggers\EventLogger;
 use App\Services\Application\Loggers\ImporterLogger;
 use App\Services\Application\Loggers\JobsLogger;
 use App\Services\Application\Loggers\ListenerLogger;
-use App\Services\Application\Loggers\SolicitarChaveLogger;
 use App\Services\Application\Loggers\StorageLogger;
 use App\Services\Application\Loggers\WebConsumerLogger;
 use Illuminate\Support\ServiceProvider;

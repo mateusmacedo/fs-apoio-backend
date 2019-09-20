@@ -13,12 +13,13 @@ use stdClass;
 
 class CancelarChavePaylodFactory extends AbstractPayloadFactory
 {
+
     public static function create(Collection $body): PayloadInterface
     {
-        if (!$body->keys()->contains('operadora') || !in_array($body->get('operadora'), self::VALID_OPERATORS)) {
+        if (!$body->keys()->contains(env('KEY_OPERADORA_IN_FILE')) || !in_array($body->get(env('KEY_OPERADORA_IN_FILE')), self::VALID_OPERATORS)) {
             throw new InvalidArgumentException('Namespace da Operadora invalido');
         }
-        switch (strtolower($body->get('operadora'))) {
+        switch (strtolower($body->get(env('KEY_OPERADORA_IN_FILE')))) {
             case 'gvt':
                 throw new RuntimeException('Payload Gvt não implementado');
                 break;

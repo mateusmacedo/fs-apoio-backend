@@ -17,7 +17,7 @@ abstract class AbstractPayloadFactory
         $dataKeys = collect($data)->keys();
         $required->keys()->each(static function ($Key) use ($dataKeys) {
             if (!$dataKeys->contains($Key)) {
-                throw new RuntimeException("chave {$Key} requerida para a criação do payloa");
+                throw new RuntimeException("chave {$Key} requerida para a criação do payloaD");
             }
         });
         $keys = $required->merge($optional);

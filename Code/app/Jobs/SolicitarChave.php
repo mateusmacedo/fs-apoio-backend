@@ -6,7 +6,6 @@ use App\Services\Application\Http\Interfaces\WebConsumerInterface;
 use App\Services\Application\Http\Payloads\Factories\SolicitarChavePaylodFactory;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Response;
@@ -17,25 +16,17 @@ use RuntimeException;
 class SolicitarChave implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    /**
-     * @var array
-     */
     private $body;
-    /**
-     * @var Application|App\Services\Application\Loggers\Interfaces\JobsLoggerInterface
-     */
     private $logger;
-    private $queueRetry = 'solicitar-chave-retry';
-    public $tries = 3;
+    private $queueRetry;
+    public $tries;
 
-    /**
-     * SolicitarChave constructor.
-     * @param array $body
-     */
     public function __construct(array $body)
     {
         $this->body = $body;
         $this->logger = app('App\Services\Application\Loggers\Interfaces\JobsLoggerInterface');
+        $this->queueRetry = env('SOLICITAR_CHAVE_QUEUE') . '-retry';
+        $this->tries = env('SOLICITAR_CHAVE_TRIES_QUEUE');
     }
 
     /**
@@ -76,7 +67,6 @@ class SolicitarChave implements ShouldQueue
     private function retryHandle()
     {
         SolicitarChave::dispatch($this->body)
-            ->onConnection('rabbitmq')
             ->onQueue($this->queueRetry);
         $this->logger->jobRedirecionado($this->queueRetry);
         $this->delete();
