@@ -6,7 +6,7 @@ namespace App\Services\Infrastructure\Storage\Interfaces;
 
 use App\Services\Infrastructure\Storage\AbstractStorageService;
 use Illuminate\Http\UploadedFile;
-use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface StorageServiceInterface
 {
@@ -18,5 +18,5 @@ interface StorageServiceInterface
 
     public function getUrl($fileName): string;
 
-    public function download($fileName): ResponseInterface;
+    public function download($fileName): StreamedResponse;
 }

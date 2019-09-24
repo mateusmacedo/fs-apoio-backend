@@ -4,6 +4,7 @@
 namespace App\Services\Infrastructure\Storage;
 
 
+use App\Exceptions\StorageException;
 use App\Services\Application\Loggers\Interfaces\StorageLoggerInterface;
 use App\Services\Infrastructure\Storage\Interfaces\LocalStorageServiceInterface;
 use Exception;
@@ -21,6 +22,7 @@ class LocalStorageService extends AbstractStorageService implements LocalStorage
     /**
      * @param $filename
      * @return File
+     * @throws StorageException
      * @todo criar teste
      */
     public function getFile($filename): File
@@ -29,12 +31,12 @@ class LocalStorageService extends AbstractStorageService implements LocalStorage
             $this->logger->getFileIniciado($this->disk, $filename);
             $path = $this->getFilePath($filename);
             if (!Storage::disk($this->disk)->exists($path)) {
-                throw new RuntimeException(self::NOT_FOUND);
+                throw new StorageException(StorageException::NOT_FOUND);
             }
             return new File($this->getFullPath($filename));
         } catch (Exception $exception) {
             $this->logger->getFileFalhou($exception);
-            throw new RuntimeException($exception->getMessage());
+            throw new StorageException($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
         } finally {
             $this->logger->getFileRealizado();
         }
@@ -43,18 +45,19 @@ class LocalStorageService extends AbstractStorageService implements LocalStorage
     /**
      * @param $filename
      * @return string
-     * criar teste
+     * @throws StorageException
+     * @todo testGetFullPath
      */
     public function getFullPath($filename): string
     {
         try {
             $path = $this->getFilePath($filename);
             if (!Storage::disk($this->disk)->exists($path)) {
-                throw new RuntimeException(self::NOT_FOUND);
+                throw new StorageException(StorageException::NOT_FOUND);
             }
             return storage_path('app/' . $path);
         } catch (Exception $exception) {
-            throw new RuntimeException($exception->getMessage());
+            throw new StorageException($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
         }
     }
 }

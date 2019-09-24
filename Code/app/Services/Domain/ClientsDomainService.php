@@ -4,8 +4,9 @@
 namespace App\Services\Domain;
 
 
-use App\Events\CancelarChaveFileStoraged;
-use App\Events\SolicitarChaveFileStoraged;
+use App\Events\Storage\CancelarChaveFileStoraged;
+use App\Events\Storage\SolicitarChaveFileStoraged;
+use App\Events\Storage\SubscriptionClientesFileStoraged;
 use App\Services\Application\Loggers\Interfaces\DomainLoggerInterface;
 use App\Services\Infrastructure\Storage\Interfaces\StorageServiceInterface;
 use App\Traits\CollectExecutionData;
@@ -34,6 +35,30 @@ class ClientsDomainService implements ClientDomainServiceInterface
     {
         $this->storageService = $storageService;
         $this->logger = $logger;
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @param string $prefix
+     * @return string
+     * @todo criar teste
+     */
+    private function generateFilename(UploadedFile $file, string $prefix): string
+    {
+        return $prefix . date('dmYHis') . '.' . $file->getClientOriginalExtension();
+    }
+
+    /**
+     * @param string $filePathStored
+     * @return array
+     * @todo criar teste
+     */
+    private function getResultData(string $filePathStored): array
+    {
+        return [
+            'fileUrl' => $this->storageService->getUrl($filePathStored),
+            'eventDispatch' => SolicitarChaveFileStoraged::class
+        ];
     }
 
     /**
@@ -82,28 +107,20 @@ class ClientsDomainService implements ClientDomainServiceInterface
         return new Response(['Fail'], 500);
     }
 
-    /**
-     * @param UploadedFile $file
-     * @param string $prefix
-     * @return string
-     * @todo criar teste
-     */
-    private function generateFilename(UploadedFile $file, string $prefix): string
+    public function subscriptionClientesFromFile(UploadedFile $file): Response
     {
-        return $prefix . date('dmYHis') . '.' . $file->getClientOriginalExtension();
+        try {
+            $this->logger->operacaoIniciada($this->getMethodData(__METHOD__, func_get_args()));
+            $this->storageService->setBasePath(env('FILESYSTEM_SUBSCRIPTION_FROM_FILE'));
+            $filePathStored = $this->storageService->store($this->generateFilename($file, env('SUBSCRIPTION_CLIENTES_PREFIX')), $file);
+            event(new SubscriptionClientesFileStoraged($filePathStored));
+            $this->logger->operacaoRealizada($this->getResultData($filePathStored));
+            return new Response(['Success'], 200);
+        } catch (Exception $exception) {
+            $this->logger->operacaoFalhou($exception);
+        } finally {
+            $this->logger->operacaoFinalizou();
+        }
+        return new Response(['Fail'], 500);
     }
-
-    /**
-     * @param string $filePathStored
-     * @return array
-     * @todo criar teste
-     */
-    private function getResultData(string $filePathStored): array
-    {
-        return [
-            'fileUrl' => $this->storageService->getUrl($filePathStored),
-            'eventDispatch' => SolicitarChaveFileStoraged::class
-        ];
-    }
-
 }

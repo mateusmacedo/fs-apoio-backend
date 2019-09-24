@@ -19,15 +19,12 @@ class CancelarChave implements ShouldQueue
 
     private $body;
     private $logger;
-    private $queueRetry;
-    public $tries;
 
     public function __construct(array $body)
     {
         $this->body = $body;
         $this->logger = app('App\Services\Application\Loggers\Interfaces\JobsLoggerInterface');
-        $this->queueRetry = env('CANCELAR_CHAVE_QUEUE') . '-retry';
-        $this->tries = env('CANCELAR_CHAVE_TRIES_QUEUE');
+        $this->queue = env('CANCELAR_CHAVE_QUEUE');
     }
 
     /**
@@ -52,12 +49,6 @@ class CancelarChave implements ShouldQueue
         }
     }
 
-    public function failed(Exception $exception)
-    {
-        $this->logger->jobFalhou($exception);
-        $this->retryHandle();
-    }
-
     private function responseHandle(Response $response)
     {
         if ($response->getStatusCode() !== 200) {
@@ -67,9 +58,10 @@ class CancelarChave implements ShouldQueue
 
     private function retryHandle()
     {
+        $retryQueue = $this->queue . ':retry';
         CancelarChave::dispatch($this->body)
-            ->onQueue($this->queueRetry);
+            ->onQueue($retryQueue);
         $this->delete();
-        $this->logger->jobRedirecionado($this->queueRetry);
+        $this->logger->jobRedirecionado($retryQueue);
     }
 }

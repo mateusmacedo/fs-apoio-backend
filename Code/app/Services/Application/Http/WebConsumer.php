@@ -49,12 +49,14 @@ class WebConsumer implements WebConsumerInterface
             $headers = $response->getHeaders();
             $contents = $response->getBody()->getContents();
             $this->logger->requestRealizada($statusCode, $headers, $contents);
-            return new Response($contents, $statusCode);
         } catch (Exception $exception) {
             $this->logger->requestFalhou($exception);
-            return new Response($exception->getMessage(), 500);
+            $contents = $exception->getMessage();
+            $statusCode = 500;
         } finally {
             $this->logger->requestFinalizou();
         }
+
+        return new Response($contents, $statusCode);
     }
 }

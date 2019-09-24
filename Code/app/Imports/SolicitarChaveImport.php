@@ -42,8 +42,7 @@ class SolicitarChaveImport implements ToCollection, WithHeadingRow, WithChunkRea
             $job = $this;
             $collection->each(static function (Collection $row) use ($job) {
                 $job->row = $row;
-                SolicitarChave::dispatch($row->all())
-                    ->onQueue(env('SOLICITAR_CHAVE_QUEUE'));
+                SolicitarChave::dispatch($row->all());
             });
         } catch (Exception $exception) {
             $this->logger->importacaoFalhou($exception, $this->collection, $this->row);

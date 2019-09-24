@@ -5,7 +5,7 @@ namespace App\Services\Application\Http\Payloads\Factories;
 
 
 use Illuminate\Support\Collection;
-use RuntimeException;
+use InvalidArgumentException;
 use stdClass;
 
 abstract class AbstractPayloadFactory
@@ -14,14 +14,13 @@ abstract class AbstractPayloadFactory
 
     static protected function hydrate(Collection $data, Collection $required, Collection $optional): stdClass
     {
-        $dataKeys = collect($data)->keys();
+        $dataKeys = $data->keys();
         $required->keys()->each(static function ($Key) use ($dataKeys) {
             if (!$dataKeys->contains($Key)) {
-                throw new RuntimeException("chave {$Key} requerida para a criação do payloaD");
+                throw new InvalidArgumentException("chave {$Key} requerida para a criação do payloaD");
             }
         });
         $keys = $required->merge($optional);
-        $data = collect($data);
         $result = new stdClass();
         $keys->each(static function ($item, $key) use (&$result, $data) {
             $camelKey = camel_case($key);

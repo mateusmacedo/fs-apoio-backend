@@ -42,8 +42,7 @@ class CancelarChaveImport implements ToCollection, WithHeadingRow, WithChunkRead
             $job = $this;
             $collection->each(static function (Collection $row) use ($job) {
                 $job->row = $row;
-                CancelarChave::dispatch($row->all())
-                    ->onQueue(env('CANCELAR_CHAVE_QUEUE'));
+                CancelarChave::dispatch($row->all());
             });
         } catch (Exception $exception) {
             $this->logger->importacaoFalhou($exception, $this->collection, $this->row);

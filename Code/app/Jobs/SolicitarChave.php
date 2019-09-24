@@ -18,15 +18,16 @@ class SolicitarChave implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $body;
     private $logger;
-    private $queueRetry;
     public $tries;
+    public $timeout;
 
     public function __construct(array $body)
     {
         $this->body = $body;
         $this->logger = app('App\Services\Application\Loggers\Interfaces\JobsLoggerInterface');
-        $this->queueRetry = env('SOLICITAR_CHAVE_QUEUE') . '-retry';
-        $this->tries = env('SOLICITAR_CHAVE_TRIES_QUEUE');
+        $this->queue = env('SOLICITAR_CHAVE_QUEUE');
+        $this->timeout = env('SOLICITAR_CHAVE_QUEUE_TIMEOUT');
+        $this->tries = env('SOLICITAR_CHAVE_QUEUE_TRIES');
     }
 
     /**
@@ -66,9 +67,9 @@ class SolicitarChave implements ShouldQueue
 
     private function retryHandle()
     {
-        SolicitarChave::dispatch($this->body)
-            ->onQueue($this->queueRetry);
-        $this->logger->jobRedirecionado($this->queueRetry);
+        $retryQueue = $this->queue . '-retry';
+        SolicitarChave::dispatch($this->body)->onQueue($retryQueue);
+        $this->logger->jobRedirecionado($retryQueue);
         $this->delete();
     }
 }

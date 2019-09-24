@@ -12,11 +12,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SolicitarChaveFileStoraged' => [
-            'App\Listeners\ImportClientes'
+        'App\Events\Storage\SolicitarChaveFileStoraged' => [
+            'App\Listeners\Import\TriggerSolicitarChaveImport'
         ],
-        'App\Events\CancelarChaveFileStoraged' => [
-            'App\Listeners\CancelClientes'
+        'App\Events\Storage\CancelarChaveFileStoraged' => [
+            'App\Listeners\Import\TriggerCancelarChaveImport'
+        ],
+        'App\Events\Storage\SubscriptionClientesFileStoraged' => [
+            'App\Listeners\Import\TriggerSubscriptionImport'
         ],
     ];
 
