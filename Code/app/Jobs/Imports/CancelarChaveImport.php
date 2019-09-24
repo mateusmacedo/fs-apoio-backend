@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Imports;
 
 use App\Services\Application\Loggers\Interfaces\JobsLoggerInterface;
 use Exception;
@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Maatwebsite\Excel\Importer;
 
-class SubscriptionClienteImport implements ShouldQueue
+class CancelarChaveImport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,7 +28,7 @@ class SubscriptionClienteImport implements ShouldQueue
     public function __construct(string $filename)
     {
         $this->filename = $filename;
-        $this->queue = env('SUBSCRIPTION_CLIENTES_QUEUE');
+        $this->queue = env('CANCELAR_CHAVE_QUEUE_IMPORT');
     }
 
     /**
@@ -44,7 +44,7 @@ class SubscriptionClienteImport implements ShouldQueue
         try {
             $this->logger->jobIniciado(__METHOD__, $this->getFile()->getFilename());
             $importer->import(
-                app('App\Imports\SubscriptionClientesImport'),
+                app('App\Imports\CancelarChaveImport'),
                 $this->getFile()
             );
             $this->logger->jobRealizado('true');
@@ -59,14 +59,14 @@ class SubscriptionClienteImport implements ShouldQueue
     private function getFile(): File
     {
         $storageService = app('App\Services\Infrastructure\Storage\Interfaces\StorageServiceInterface');
-        $storageService->setBasePath(env('FILESYSTEM_IMPORT_FROM_FILE'));
+        $storageService->setBasePath(env('FILESYSTEM_CANCEL_FROM_FILE'));
         return $storageService->getFile($this->filename);
     }
 
     private function retryHandle()
     {
         $queueRetry = $this->queue . ':retry';
-        SubscriptionClienteImport::dispatch($this->filename)
+        CancelarChaveImport::dispatch($this->filename)
             ->onQueue($queueRetry);
         $this->delete();
         $this->logger->jobRedirecionado($queueRetry);

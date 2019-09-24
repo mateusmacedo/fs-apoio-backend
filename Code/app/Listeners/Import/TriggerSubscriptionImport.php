@@ -3,7 +3,7 @@
 namespace App\Listeners\Import;
 
 use App\Events\Storage\SubscriptionClientesFileStoraged;
-use App\Jobs\SubscriptionClienteImport;
+use App\Jobs\Imports\SubscriptionClienteImport;
 use App\Services\Application\Loggers\Interfaces\ListenerLoggerInterface;
 use Exception;
 use Maatwebsite\Excel\Importer;

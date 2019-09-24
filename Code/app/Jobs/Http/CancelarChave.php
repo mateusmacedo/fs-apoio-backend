@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Http;
 
 use App\Services\Application\Http\Interfaces\WebConsumerInterface;
 use App\Services\Application\Http\Payloads\Factories\CancelarChavePaylodFactory;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Imports;
 
 use App\Services\Application\Loggers\Interfaces\JobsLoggerInterface;
 use Exception;
@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Maatwebsite\Excel\Importer;
 
-class SolicitarChaveImport implements ShouldQueue
+class SubscriptionClienteImport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,7 +28,7 @@ class SolicitarChaveImport implements ShouldQueue
     public function __construct(string $filename)
     {
         $this->filename = $filename;
-        $this->queue = env('SOLICITAR_CHAVE_QUEUE');
+        $this->queue = env('SUBSCRIPTION_CLIENTES_QUEUE');
     }
 
     /**
@@ -44,7 +44,7 @@ class SolicitarChaveImport implements ShouldQueue
         try {
             $this->logger->jobIniciado(__METHOD__, $this->getFile()->getFilename());
             $importer->import(
-                app('App\Imports\SolicitarChaveImport'),
+                app('App\Imports\SubscriptionClientesImport'),
                 $this->getFile()
             );
             $this->logger->jobRealizado('true');
@@ -66,7 +66,7 @@ class SolicitarChaveImport implements ShouldQueue
     private function retryHandle()
     {
         $queueRetry = $this->queue . ':retry';
-        CancelarChaveImport::dispatch($this->filename)
+        SubscriptionClienteImport::dispatch($this->filename)
             ->onQueue($queueRetry);
         $this->delete();
         $this->logger->jobRedirecionado($queueRetry);

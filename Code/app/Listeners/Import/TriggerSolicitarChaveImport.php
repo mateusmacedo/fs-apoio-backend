@@ -3,7 +3,7 @@
 namespace App\Listeners\Import;
 
 use App\Events\Storage\SolicitarChaveFileStoraged;
-use App\Jobs\SolicitarChaveImport;
+use App\Jobs\Imports\SolicitarChaveImport;
 use App\Services\Application\Loggers\Interfaces\ListenerLoggerInterface;
 use Exception;
 

@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Jobs\SolicitarChave;
+use App\Jobs\Http\SolicitarChave;
 use App\Services\Application\Loggers\Interfaces\ImporterLoggerInterface;
 use Exception;
 use Illuminate\Support\Collection;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Imports;
 
 use App\Services\Application\Loggers\Interfaces\JobsLoggerInterface;
 use Exception;
@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Maatwebsite\Excel\Importer;
 
-class CancelarChaveImport implements ShouldQueue
+class SolicitarChaveImport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,7 +28,7 @@ class CancelarChaveImport implements ShouldQueue
     public function __construct(string $filename)
     {
         $this->filename = $filename;
-        $this->queue = env('CANCELAR_CHAVE_QUEUE_IMPORT');
+        $this->queue = env('SOLICITAR_CHAVE_QUEUE');
     }
 
     /**
@@ -44,7 +44,7 @@ class CancelarChaveImport implements ShouldQueue
         try {
             $this->logger->jobIniciado(__METHOD__, $this->getFile()->getFilename());
             $importer->import(
-                app('App\Imports\CancelarChaveImport'),
+                app('App\Imports\SolicitarChaveImport'),
                 $this->getFile()
             );
             $this->logger->jobRealizado('true');
@@ -59,7 +59,7 @@ class CancelarChaveImport implements ShouldQueue
     private function getFile(): File
     {
         $storageService = app('App\Services\Infrastructure\Storage\Interfaces\StorageServiceInterface');
-        $storageService->setBasePath(env('FILESYSTEM_CANCEL_FROM_FILE'));
+        $storageService->setBasePath(env('FILESYSTEM_IMPORT_FROM_FILE'));
         return $storageService->getFile($this->filename);
     }
 

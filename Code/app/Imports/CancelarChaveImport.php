@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Jobs\CancelarChave;
+use App\Jobs\Http\CancelarChave;
 use App\Services\Application\Loggers\Interfaces\ImporterLoggerInterface;
 use Exception;
 use Illuminate\Support\Collection;

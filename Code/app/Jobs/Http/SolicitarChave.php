@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Http;
 
 use App\Services\Application\Http\Interfaces\WebConsumerInterface;
-use App\Services\Application\Http\Payloads\Factories\SubscriptionPaylodFactory;
+use App\Services\Application\Http\Payloads\Factories\SolicitarChavePaylodFactory;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,21 +13,21 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use RuntimeException;
 
-class SubscriptionCliente implements ShouldQueue
+class SolicitarChave implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries;
     private $body;
     private $logger;
-    private $timeout;
+    public $tries;
+    public $timeout;
 
     public function __construct(array $body)
     {
         $this->body = $body;
         $this->logger = app('App\Services\Application\Loggers\Interfaces\JobsLoggerInterface');
-        $this->queue = env('SUBSCRIPTION_CLIENTES_QUEUE');
-        $this->timeout = env('SUBSCRIPTION_CLIENTES_QUEUE_TIMEOUT');
-        $this->tries = env('SUBSCRIPTION_CLIENTES_QUEUE_TRIES');
+        $this->queue = env('SOLICITAR_CHAVE_QUEUE');
+        $this->timeout = env('SOLICITAR_CHAVE_QUEUE_TIMEOUT');
+        $this->tries = env('SOLICITAR_CHAVE_QUEUE_TRIES');
     }
 
     /**
@@ -40,7 +40,7 @@ class SubscriptionCliente implements ShouldQueue
     {
         try {
             $this->logger->jobIniciado(__METHOD__, json_encode($this->body));
-            $payload = SubscriptionPaylodFactory::create(collect($this->body));
+            $payload = SolicitarChavePaylodFactory::create(collect($this->body));
             $result = $webConsumer->fetch($payload);
             $this->responseHandle($result);
             $this->logger->jobRealizado($result->getContent());
@@ -52,6 +52,12 @@ class SubscriptionCliente implements ShouldQueue
         }
     }
 
+    public function failed(Exception $exception)
+    {
+        $this->logger->jobFalhou($exception);
+        $this->retryHandle();
+    }
+
     private function responseHandle(Response $response)
     {
         if ($response->getStatusCode() !== 200) {
@@ -61,15 +67,9 @@ class SubscriptionCliente implements ShouldQueue
 
     private function retryHandle()
     {
-        $queueRetry = $this->queue . 'retry';
-        SubscriptionCliente::dispatch($this->body)->onQueue($queueRetry);
-        $this->logger->jobRedirecionado($queueRetry);
+        $retryQueue = $this->queue . '-retry';
+        SolicitarChave::dispatch($this->body)->onQueue($retryQueue);
+        $this->logger->jobRedirecionado($retryQueue);
         $this->delete();
-    }
-
-    public function failed(Exception $exception)
-    {
-        $this->logger->jobFalhou($exception);
-        $this->retryHandle();
     }
 }

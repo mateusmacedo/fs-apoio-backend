@@ -3,7 +3,7 @@
 namespace App\Listeners\Import;
 
 use App\Events\Storage\CancelarChaveFileStoraged;
-use App\Jobs\CancelarChaveImport;
+use App\Jobs\Imports\CancelarChaveImport;
 use App\Services\Application\Loggers\Interfaces\ListenerLoggerInterface;
 use Exception;
 

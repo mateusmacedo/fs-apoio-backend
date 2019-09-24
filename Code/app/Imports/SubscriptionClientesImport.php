@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Jobs\SubscriptionCliente;
+use App\Jobs\Http\SubscriptionCliente;
 use App\Services\Application\Loggers\Interfaces\ImporterLoggerInterface;
 use Exception;
 use Illuminate\Support\Collection;
