@@ -5,43 +5,21 @@ namespace App\Services\Application\Http\Payloads\Gvt;
 
 
 use App\Services\Application\Http\Interfaces\PayloadInterface;
+use App\Traits\DataTransformer;
 use stdClass;
 
 class SolicitarChave implements PayloadInterface
 {
+    use DataTransformer;
     /**
-     * @var string
+     * @var stdClass
      */
-    private $msisdn;
-    /**
-     * @var string
-     */
-    private $cpf;
-    /**
-     * @var string
-     */
-    private $email;
-    /**
-     * @var string
-     */
-    private $purchaseOrderNumber;
-    /**
-     * @var string
-     */
-    private $serviceId;
-    /**
-     * @var string
-     */
-    private $produto;
+    private $params;
 
     public function __construct(stdClass $params)
     {
-        $this->msisdn = $params->msisdn;
-        $this->cpf = $params->cpf;
-        $this->email = $params->email;
-        $this->purchaseOrderNumber = $params->purchaseOrderNumber;
-        $this->serviceId = $params->serviceId;
-        $this->produto = $params->produto;
+
+        $this->params = $params;
     }
 
     public function __toString(): string
@@ -73,15 +51,8 @@ class SolicitarChave implements PayloadInterface
 
     public function getBody(): string
     {
-        $data = [
-            'msisdn' => $this->msisdn,
-            'cpf' => $this->cpf,
-            'email' => $this->email,
-            'purchaseOrderNumber' => $this->purchaseOrderNumber,
-            'serviceId' => $this->serviceId,
-            'produto' => $this->produto,
-        ];
-        return http_build_query($data, null, '&');
+        $payloadParams = $this->objectToArray($this->params);
+        return http_build_query($payloadParams, null, '&');
 
     }
 }

@@ -5,7 +5,6 @@ namespace App\Events\Storage;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use SplFileInfo;
 
 class SubscriptionClientesFileStoraged
 {
@@ -36,13 +35,4 @@ class SubscriptionClientesFileStoraged
         $this->logger->metodoExecutado(__METHOD__, func_get_args());
         return $this->filename;
     }
-
-    public function getFile(): SplFileInfo
-    {
-        $this->logger->metodoExecutado(__METHOD__, func_get_args());
-        $storageService = app('App\Services\Infrastructure\Storage\Interfaces\StorageServiceInterface');
-        $storageService->setBasePath(env('FILESYSTEM_SUBSCRIPTION_FROM_FILE'));
-        return $storageService->getFile($this->filename);
-    }
-
 }

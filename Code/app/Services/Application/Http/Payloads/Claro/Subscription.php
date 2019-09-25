@@ -5,30 +5,25 @@ namespace App\Services\Application\Http\Payloads\Claro;
 
 
 use App\Services\Application\Http\Interfaces\PayloadInterface;
+use App\Traits\DataTransformer;
 use stdClass;
 
 class Subscription implements PayloadInterface
 {
+    use DataTransformer;
+    /**
+     * @var stdClass
+     */
+    private $params;
 
-    private $silent;
-    private $identifier;
-    private $la;
-    private $partner;
-    private $reason;
-    private $canceler;
-    private $action;
-    private $subscriptionId;
-
+    /**
+     * Subscription constructor.
+     * @param stdClass $params
+     */
     public function __construct(stdClass $params)
     {
-        $this->silent = $params->silent;
-        $this->identifier = $params->identifier;
-        $this->la = $params->la;
-        $this->partner = $params->partner;
-        $this->reason = $params->reason;
-        $this->canceler = $params->canceler;
-        $this->action = $params->action;
-        $this->subscriptionId = $params->subscriptionId;
+
+        $this->params = $params;
     }
 
     public function __toString(): string
@@ -60,15 +55,7 @@ class Subscription implements PayloadInterface
 
     public function getBody(): string
     {
-        return json_encode([
-            'silent' => $this->silent,
-            'identifier' => $this->identifier,
-            'la' => $this->la,
-            'partner' => $this->partner,
-            'reason' => $this->reason,
-            'canceler' => $this->canceler,
-            'action' => $this->action,
-            'subscriptionId' => $this->subscriptionId
-        ]);
+        $payloadParams = $this->objectToArray($this->params);
+        return json_encode($payloadParams);
     }
 }

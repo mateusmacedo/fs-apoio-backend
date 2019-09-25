@@ -5,27 +5,20 @@ namespace App\Services\Application\Http\Payloads\Tim;
 
 
 use App\Services\Application\Http\Interfaces\PayloadInterface;
+use App\Traits\DataTransformer;
 use stdClass;
 
 class CancelarChave implements PayloadInterface
 {
-    private $chave;
-    private $motivo;
-    private $vendedor;
-    private $silent;
-    private $clientCorrelator;
-    private $biAcao;
-    private $canalCancelamento;
+    use DataTransformer;
+    /**
+     * @var stdClass
+     */
+    private $params;
 
     public function __construct(stdClass $params)
     {
-        $this->chave = $params->chave;
-        $this->motivo = $params->motivo;
-        $this->vendedor = $params->vendedor;
-        $this->silent = $params->silent;
-        $this->clientCorrelator = $params->clientCorrelator;
-        $this->biAcao = $params->biAcao;
-        $this->canalCancelamento = $params->canalCancelamento;
+        $this->params = $params;
     }
 
     public function __toString(): string
@@ -41,15 +34,8 @@ class CancelarChave implements PayloadInterface
 
     public function getBody(): string
     {
-        return json_encode([
-            'chave' => $this->chave,
-            'motivo' => $this->motivo,
-            'vendedor' => $this->vendedor,
-            'silent' => $this->silent,
-            'clientCorrelator' => $this->clientCorrelator,
-            'biAcao' => $this->biAcao,
-            'canalCancelamento' => $this->canalCancelamento
-        ]);
+        $payloadParams = $this->objectToArray($this->params);
+        return json_encode($payloadParams);
     }
 
     public function getUri(): string

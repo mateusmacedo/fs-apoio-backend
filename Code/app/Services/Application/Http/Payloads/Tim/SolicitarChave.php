@@ -5,68 +5,24 @@ namespace App\Services\Application\Http\Payloads\Tim;
 
 
 use App\Services\Application\Http\Interfaces\PayloadInterface;
+use App\Traits\DataTransformer;
 use stdClass;
 
 class SolicitarChave implements PayloadInterface
 {
+    use DataTransformer;
     /**
-     * @var string
+     * @var stdClass
      */
-    private $msisdn;
-    /**
-     * @var string
-     */
-    private $subscriptionId;
-    /**
-     * @var int
-     */
-    private $ppId;
-    /**
-     * @var string
-     */
-    private $email;
-    /**
-     * @var string
-     */
-    private $nome;
-    /**
-     * @var string
-     */
-    private $transactionOptions;
-    /**
-     * @var string
-     */
-    private $vendedor;
-    /**
-     * @var string
-     */
-    private $campanha;
-    /**
-     * @var string
-     */
-    private $biAcao;
-    /**
-     * @var string
-     */
-    private $canal;
-    /**
-     * @var bool
-     */
-    private $silent;
+    private $params;
 
+    /**
+     * SolicitarChave constructor.
+     * @param stdClass $params
+     */
     public function __construct(stdClass $params)
     {
-        $this->msisdn = (string)$params->msisdn;
-        $this->subscriptionId = $params->subscriptionId;
-        $this->ppId = $params->ppId;
-        $this->email = $params->email;
-        $this->nome = $params->nome;
-        $this->transactionOptions = $params->transactionOptions;
-        $this->vendedor = $params->vendedor;
-        $this->campanha = $params->campanha;
-        $this->biAcao = $params->biAcao;
-        $this->canal = $params->canal;
-        $this->silent = $params->silent;
+        $this->params = $params;
     }
 
     public function __toString(): string
@@ -99,18 +55,7 @@ class SolicitarChave implements PayloadInterface
 
     public function getBody(): string
     {
-        return json_encode([
-            'msisdn' => $this->msisdn,
-            'subscriptionId' => $this->subscriptionId,
-            'ppId' => $this->ppId,
-            'email' => $this->email,
-            'nome' => $this->nome,
-            'transactionOptions' => $this->transactionOptions,
-            'vendedor' => $this->vendedor,
-            'campanha' => $this->campanha,
-            'biAcao' => $this->biAcao,
-            'canal' => $this->canal,
-            'silent' => $this->silent
-        ]);
+        $payloadParams = $this->objectToArray($this->params);
+        return json_encode($payloadParams);
     }
 }

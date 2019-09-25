@@ -49,22 +49,8 @@ class ClientsDomainService implements ClientDomainServiceInterface
     }
 
     /**
-     * @param string $filePathStored
-     * @return array
-     * @todo criar teste
-     */
-    private function getResultData(string $filePathStored): array
-    {
-        return [
-            'fileUrl' => $this->storageService->getUrl($filePathStored),
-            'eventDispatch' => SolicitarChaveFileStoraged::class
-        ];
-    }
-
-    /**
      * @param UploadedFile $file
      * @return Response
-     * @todo analisar melhor o ponto de lançamento do evento
      * @todo Criar teste
      */
     public function solicitarChavesFromFile(UploadedFile $file): Response
@@ -73,8 +59,8 @@ class ClientsDomainService implements ClientDomainServiceInterface
             $this->logger->operacaoIniciada($this->getMethodData(__METHOD__, func_get_args()));
             $this->storageService->setBasePath(env('FILESYSTEM_IMPORT_FROM_FILE'));
             $filePathStored = $this->storageService->store($this->generateFilename($file, env('SOLICITAR_CHAVE_PREFIX')), $file);
-            event(new SolicitarChaveFileStoraged($filePathStored));
-            $this->logger->operacaoRealizada($this->getResultData($filePathStored));
+            $eventDispacth = event(new SolicitarChaveFileStoraged($filePathStored));
+            $this->logger->operacaoRealizada([$filePathStored, $eventDispacth]);
             return new Response(['Success'], 200);
         } catch (Exception $exception) {
             $this->logger->operacaoFalhou($exception);
@@ -96,8 +82,8 @@ class ClientsDomainService implements ClientDomainServiceInterface
             $this->logger->operacaoIniciada($this->getMethodData(__METHOD__, func_get_args()));
             $this->storageService->setBasePath(env('FILESYSTEM_CANCEL_FROM_FILE'));
             $filePathStored = $this->storageService->store($this->generateFilename($file, env('CANCELAR_CHAVE_PREFIX')), $file);
-            event(new CancelarChaveFileStoraged($filePathStored));
-            $this->logger->operacaoRealizada($this->getResultData($filePathStored));
+            $eventDispacth = event(new CancelarChaveFileStoraged($filePathStored));
+            $this->logger->operacaoRealizada([$filePathStored, $eventDispacth]);
             return new Response(['Success'], 200);
         } catch (Exception $exception) {
             $this->logger->operacaoFalhou($exception);
@@ -113,8 +99,8 @@ class ClientsDomainService implements ClientDomainServiceInterface
             $this->logger->operacaoIniciada($this->getMethodData(__METHOD__, func_get_args()));
             $this->storageService->setBasePath(env('FILESYSTEM_SUBSCRIPTION_FROM_FILE'));
             $filePathStored = $this->storageService->store($this->generateFilename($file, env('SUBSCRIPTION_CLIENTES_PREFIX')), $file);
-            event(new SubscriptionClientesFileStoraged($filePathStored));
-            $this->logger->operacaoRealizada($this->getResultData($filePathStored));
+            $eventDispacth = event(new SubscriptionClientesFileStoraged($filePathStored));
+            $this->logger->operacaoRealizada([$filePathStored, $eventDispacth]);
             return new Response(['Success'], 200);
         } catch (Exception $exception) {
             $this->logger->operacaoFalhou($exception);
