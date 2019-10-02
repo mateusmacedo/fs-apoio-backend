@@ -38,7 +38,7 @@ class Subscription implements PayloadInterface
 
     public function getUri(): string
     {
-        return 'http://' . env('CLARO_BACKEND_URL') . '/v1/main/subscribe';
+        return 'http://' . env('SUBSCRIPTION_API') . '/v1/main/subscribe';
     }
 
     public function getMethod(): string
@@ -49,7 +49,7 @@ class Subscription implements PayloadInterface
     public function getHeaders(): array
     {
         return [
-            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Content-Type' => 'application/json',
         ];
     }
 

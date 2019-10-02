@@ -20,6 +20,7 @@ class SubscriptionCliente implements ShouldQueue
     private $body;
     private $logger;
     private $timeout;
+    private $validReturnStatusCode = [200, 201];
 
     public function __construct(array $body)
     {
@@ -54,16 +55,18 @@ class SubscriptionCliente implements ShouldQueue
 
     private function responseHandle(Response $response)
     {
-        if ($response->getStatusCode() !== 200) {
+        if (!in_array($response->getStatusCode(), $this->validReturnStatusCode)) {
             throw new RuntimeException($response->getContent());
         }
     }
 
     private function retryHandle()
     {
-        $queueRetry = $this->queue . 'retry';
-        SubscriptionCliente::dispatch($this->body)->onQueue($queueRetry);
-        $this->logger->jobRedirecionado($queueRetry);
+        if (strpos($this->queue, ':retry') === false) {
+            $this->queue = $this->queue . ':retry';
+        }
+        SubscriptionCliente::dispatch($this->body)->onQueue($this->queue);
+        $this->logger->jobRedirecionado($this->queue);
         $this->delete();
     }
 

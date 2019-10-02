@@ -58,10 +58,12 @@ class CancelarChave implements ShouldQueue
 
     private function retryHandle()
     {
-        $retryQueue = $this->queue . ':retry';
+        if (strpos($this->queue, ':retry') === false) {
+            $this->queue = $this->queue . ':retry';
+        }
         CancelarChave::dispatch($this->body)
-            ->onQueue($retryQueue);
+            ->onQueue($this->queue);
         $this->delete();
-        $this->logger->jobRedirecionado($retryQueue);
+        $this->logger->jobRedirecionado($this->queue);
     }
 }

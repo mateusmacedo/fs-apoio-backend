@@ -67,9 +67,11 @@ class SolicitarChave implements ShouldQueue
 
     private function retryHandle()
     {
-        $retryQueue = $this->queue . '-retry';
-        SolicitarChave::dispatch($this->body)->onQueue($retryQueue);
-        $this->logger->jobRedirecionado($retryQueue);
+        if (strpos($this->queue, ':retry') === false) {
+            $this->queue = $this->queue . ':retry';
+        }
+        SolicitarChave::dispatch($this->body)->onQueue($this->queue);
+        $this->logger->jobRedirecionado($this->queue);
         $this->delete();
     }
 }

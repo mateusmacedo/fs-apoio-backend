@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('importar-clientes-arquivo', 'ImportClientsFromExcel');
 Route::post('cancelar-clientes-arquivo', 'CancelClientsFromExcel');
+Route::post('subscribe-clientes-arquivo', 'SubscriptionClientsFromExcel');

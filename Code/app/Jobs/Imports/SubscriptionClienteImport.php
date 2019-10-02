@@ -28,7 +28,7 @@ class SubscriptionClienteImport implements ShouldQueue
     public function __construct(string $filename)
     {
         $this->filename = $filename;
-        $this->queue = env('SUBSCRIPTION_CLIENTES_QUEUE');
+        $this->queue = env('SUBSCRIPTION_CLIENTES_QUEUE_IMPORT');
     }
 
     /**
@@ -59,7 +59,7 @@ class SubscriptionClienteImport implements ShouldQueue
     private function getFile(): File
     {
         $storageService = app('App\Services\Infrastructure\Storage\Interfaces\StorageServiceInterface');
-        $storageService->setBasePath(env('FILESYSTEM_IMPORT_FROM_FILE'));
+        $storageService->setBasePath(env('FILESYSTEM_SUBSCRIPTION_FROM_FILE'));
         return $storageService->getFile($this->filename);
     }
 
