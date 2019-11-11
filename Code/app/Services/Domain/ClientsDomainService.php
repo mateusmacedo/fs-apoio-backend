@@ -5,6 +5,7 @@ namespace App\Services\Domain;
 
 
 use App\Events\Storage\CancelarChaveFileStoraged;
+use App\Events\Storage\PresaleClientesFileStoraged;
 use App\Events\Storage\SolicitarChaveFileStoraged;
 use App\Events\Storage\SubscriptionClientesFileStoraged;
 use App\Services\Application\Loggers\Interfaces\DomainLoggerInterface;
@@ -100,6 +101,23 @@ class ClientsDomainService implements ClientDomainServiceInterface
             $this->storageService->setBasePath(env('FILESYSTEM_SUBSCRIPTION_FROM_FILE'));
             $filePathStored = $this->storageService->store($this->generateFilename($file, env('SUBSCRIPTION_CLIENTES_PREFIX')), $file);
             $eventDispacth = event(new SubscriptionClientesFileStoraged($filePathStored));
+            $this->logger->operacaoRealizada([$filePathStored, $eventDispacth]);
+            return new Response(['Success'], 200);
+        } catch (Exception $exception) {
+            $this->logger->operacaoFalhou($exception);
+        } finally {
+            $this->logger->operacaoFinalizou();
+        }
+        return new Response(['Fail'], 500);
+    }
+
+    public function presaleClientesFromFile(UploadedFile $file): Response
+    {
+        try {
+            $this->logger->operacaoIniciada($this->getMethodData(__METHOD__, func_get_args()));
+            $this->storageService->setBasePath(env('FILESYSTEM_PRESALE_SUBSCRIPTION_FROM_FILE'));
+            $filePathStored = $this->storageService->store($this->generateFilename($file, env('PRESALE_SUBSCRIPTION_PREFIX')), $file);
+            $eventDispacth = event(new PresaleClientesFileStoraged($filePathStored));
             $this->logger->operacaoRealizada([$filePathStored, $eventDispacth]);
             return new Response(['Success'], 200);
         } catch (Exception $exception) {

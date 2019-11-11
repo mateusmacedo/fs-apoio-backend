@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\Storage\CancelarChaveFileStoraged;
+use App\Events\Storage\PresaleClientesFileStoraged;
+use App\Events\Storage\SolicitarChaveFileStoraged;
+use App\Events\Storage\SubscriptionClientesFileStoraged;
+use App\Listeners\Import\TriggerCancelarChaveImport;
+use App\Listeners\Import\TriggerPresaleImport;
+use App\Listeners\Import\TriggerSolicitarChaveImport;
+use App\Listeners\Import\TriggerSubscriptionImport;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -12,15 +20,18 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Storage\SolicitarChaveFileStoraged' => [
-            'App\Listeners\Import\TriggerSolicitarChaveImport'
+        SolicitarChaveFileStoraged::class => [
+            TriggerSolicitarChaveImport::class
         ],
-        'App\Events\Storage\CancelarChaveFileStoraged' => [
-            'App\Listeners\Import\TriggerCancelarChaveImport'
+        CancelarChaveFileStoraged::class => [
+            TriggerCancelarChaveImport::class
         ],
-        'App\Events\Storage\SubscriptionClientesFileStoraged' => [
-            'App\Listeners\Import\TriggerSubscriptionImport'
+        SubscriptionClientesFileStoraged::class => [
+            TriggerSubscriptionImport::class
         ],
+        PresaleClientesFileStoraged::class => [
+            TriggerPresaleImport::class
+        ]
     ];
 
     /**

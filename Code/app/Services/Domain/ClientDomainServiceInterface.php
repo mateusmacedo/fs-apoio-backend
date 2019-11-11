@@ -14,4 +14,6 @@ interface ClientDomainServiceInterface
     public function cancelarChavesFromFile(UploadedFile $file): Response;
 
     public function subscriptionClientesFromFile(UploadedFile $file): Response;
+
+    public function presaleClientesFromFile(UploadedFile $file): Response;
 }

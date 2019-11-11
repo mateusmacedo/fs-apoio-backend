@@ -6,6 +6,7 @@ namespace App\Services\Application\Http\Payloads\Factories;
 
 use App\Services\Application\Http\Interfaces\PayloadInterface;
 use App\Services\Application\Http\Payloads\Gvt\SolicitarChave as SolicitarChaveGvt;
+use App\Services\Application\Http\Payloads\Presale\Subscription as PresaleSubscription;
 use App\Services\Application\Http\Payloads\Tim\SolicitarChave as SolicitarChaveTim;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
@@ -14,7 +15,7 @@ use stdClass;
 
 class SolicitarChavePaylodFactory extends AbstractPayloadFactory
 {
-    static private function buildGvt(Collection $data)
+    private static function buildGvt(Collection $data)
     {
         $required = collect([
         ]);
@@ -23,7 +24,7 @@ class SolicitarChavePaylodFactory extends AbstractPayloadFactory
         return static::hydrate($data, $required, $optional);
     }
 
-    static private function buildTim(Collection $data): stdClass
+    private static function buildTim(Collection $data): stdClass
     {
         $required = collect([
             'subscription_id' => '',
@@ -43,6 +44,23 @@ class SolicitarChavePaylodFactory extends AbstractPayloadFactory
         return static::hydrate($data, $required, $optional);
     }
 
+    private static function buildPresale(Collection $data): stdClass
+    {
+        $required = collect([
+            'subscription_id' => '',
+            'campaign' => '',
+            'partner_name' => ''
+        ]);
+        $optional = collect([
+            'user_email' => '',
+            'user_msisdn' => '',
+            'user_name' => '',
+            'user_cpf' => '',
+            'user_cnpj' => '',
+        ]);
+        return static::hydrate($data, $required, $optional);
+    }
+
     public static function create(Collection $body): PayloadInterface
     {
         if (!$body->keys()->contains(env('KEY_OPERADORA_IN_FILE')) || !in_array($body->get(env('KEY_OPERADORA_IN_FILE')), self::VALID_OPERATORS)) {
@@ -56,6 +74,10 @@ class SolicitarChavePaylodFactory extends AbstractPayloadFactory
             case 'tim':
                 $payloadData = static::buildTim($body);
                 $payload = new SolicitarChaveTim($payloadData);
+                break;
+            case 'presale':
+                $payloadData = static::buildPresale($body);
+                $payload = new PresaleSubscription($payloadData);
                 break;
             default:
                 throw new RuntimeException('Payload não criado');

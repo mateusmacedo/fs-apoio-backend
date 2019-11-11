@@ -10,14 +10,14 @@ use stdClass;
 
 abstract class AbstractPayloadFactory
 {
-    const VALID_OPERATORS = ['tim', 'gvt', 'vivo', 'oi', 'claro'];
+    public const VALID_OPERATORS = ['tim', 'gvt', 'vivo', 'oi', 'claro', 'presale'];
 
-    static protected function hydrate(Collection $data, Collection $required, Collection $optional): stdClass
+    protected static function hydrate(Collection $data, Collection $required, Collection $optional): stdClass
     {
         $dataKeys = $data->keys();
         $required->keys()->each(static function ($Key) use ($dataKeys) {
             if (!$dataKeys->contains($Key)) {
-                throw new InvalidArgumentException("chave {$Key} requerida para a criação do payloaD");
+                throw new InvalidArgumentException("chave {$Key} requerida para a criação do payload");
             }
         });
         $keys = $required->merge($optional);

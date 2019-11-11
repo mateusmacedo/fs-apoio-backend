@@ -34,7 +34,7 @@ class CancelarChavePaylodFactory extends AbstractPayloadFactory
         return $payload;
     }
 
-    static private function buildTim(Collection $data): stdClass
+    private static function buildTim(Collection $data): stdClass
     {
         $required = collect([
             'chave' => '',

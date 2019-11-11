@@ -53,7 +53,7 @@ class WebConsumerLogger implements WebConsumerLoggerInterface
     public function requestFalhou(Exception $exception): void
     {
         $this->logger->debug('### REQUEST FALHOU EXCEPTION ###');
-        $this->logger->debug($exception);
+        $this->logger->debug($exception->getMessage());
     }
 
     /**

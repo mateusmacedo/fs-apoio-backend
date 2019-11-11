@@ -36,7 +36,7 @@ class DomainLogger implements DomainLoggerInterface
     public function operacaoFalhou(Exception $exception): void
     {
         $this->logger->debug('### OPERAÇÃO FALHOU EXCEPTION ###');
-        $this->logger->debug($exception);
+        $this->logger->debug($exception->getMessage());
     }
 
     public function operacaoFinalizou(): void

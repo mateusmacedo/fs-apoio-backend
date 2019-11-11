@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SubscriptionClientesFileStoraged
+class PresaleClientesFileStoraged
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     /**
@@ -22,7 +22,7 @@ class SubscriptionClientesFileStoraged
     public function __construct(string $filename)
     {
         $this->filename = $filename;
-        $this->logger = app('App\Services\Application\Loggers\Interfaces\EventLoggerInterface');
+        $this->logger = app(EventLoggerInterface::class);
         $this->logger->eventoDisparado(static::class, $filename);
     }
 
